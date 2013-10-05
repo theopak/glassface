@@ -12,8 +12,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.TextView;
-import android.widget.Chronometer;
-//import android.os.SystemClock;
 //import android.os.SystemClock;
 //android.speech.SpeechRecognizer
 
@@ -21,11 +19,10 @@ import android.widget.Chronometer;
 /**
  * StopWatch sample's main activity.
  */
-public class MeetActivity extends Activity {
+public class MainActivity extends Activity {
 	
   private TextView mPrompt;
   private TextView mHint;
-  private Chronometer mClock;
   private boolean mStarted = false;
 
   @Override
@@ -33,7 +30,6 @@ public class MeetActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_meet);
     
-    mClock = (Chronometer) findViewById(R.id.clock);
     mPrompt = (TextView) findViewById(R.id.prompt);
     mHint = (TextView) findViewById(R.id.hint);
   }
