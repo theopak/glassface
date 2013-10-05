@@ -4,6 +4,8 @@
 	{% if twitter_connected %}
 		Connected to twiiter
 	{% else %}
-		<a href="{% url "glassface.views.twitterconnect" %}">Connect to twitter</a>
-	{% endif %}
+<a href="{% url 'social:begin' "google-oauth2" %}">Google OAuth</a> <br />
+<a href="{% url 'social:begin' "twitter" %}">Twitter OAuth</a> <br />
+
+{% endif %}
 {% endblock %}
