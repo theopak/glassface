@@ -5,8 +5,8 @@ class AuthMiddleware( object ):
     Backend will get user.
     """
     def process_request(self, request):
-        if "username" not in request.POST:
+        if "post_username" not in request.POST:
             return
-        user = authenticate(remote_user=request.POST["username"])
+        user = authenticate(remote_user=request.POST["post_username"])
         request.user = user
         login(request, user)
