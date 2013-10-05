@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% if twitter_connected %}
+		Connected to twiiter
+	{% else %}
+		<a href="{% url "glassface.views.twitterconnect" %}">Connect to twitter</a>
+	{% endif %}
+{% endblock %}
