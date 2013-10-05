@@ -4,6 +4,12 @@ import os
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print PROJECT_PATH
 
+SOCIAL_AUTH_TWITTER_KEY = '4mBBsoUEZOyxTOcMkvv21w'
+SOCIAL_AUTH_TWITTER_SECRET = '7zWY1GzkeKP5JPcnfSGE7ikdv9CvRol5UrHK7Rf1MQE'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '912718038355.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'zQM4ONcsxHF0EiJv46AllL92'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email ']
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -96,6 +102,12 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -103,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'glassface.middleware.AuthMiddleware',
+    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -110,6 +123,8 @@ MIDDLEWARE_CLASSES = (
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'glassface.backends.Backend',
+    'social.backends.twitter.TwitterOAuth',
+    'social.backends.google.GoogleOAuth2',
 )
 
 
@@ -136,6 +151,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'glassface.recognition',
     'glassface',
+    'social.apps.django_app.default',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

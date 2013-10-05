@@ -21,3 +21,17 @@ def create_user(request, user_creation_form=UserCreationForm):
         'form': form,
     }
     return TemplateResponse(request, "registration/signup.html", context)
+
+def logins(request):
+    user = request.user
+    context = {
+        'twitter_connected': False,
+    }
+    return TemplateResponse(request, "logins/index.html", context)
+
+def twitterconnect(request):
+    context = {
+        'twitter_connected': False,
+    }
+
+    return TemplateResponse(request, "logins/twitter/connect.html", context)
