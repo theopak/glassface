@@ -12,7 +12,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.TextView;
-//import android.os.SystemClock;
+import android.widget.DigitalClock;
 //android.speech.SpeechRecognizer
 
 
@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 	
   private TextView mPrompt;
   private TextView mHint;
+  private DigitalClock mClock;
   private boolean mStarted = false;
 
   @Override
@@ -32,6 +33,10 @@ public class MainActivity extends Activity {
     
     mPrompt = (TextView) findViewById(R.id.prompt);
     mHint = (TextView) findViewById(R.id.hint);
+
+    //mClock = (DigitalClock) findViewById(R.id.chrono);
+    //mClock.setBase(SystemClock.elapsedRealtime());
+    //mClock.start();
   }
 
   /**
