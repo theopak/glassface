@@ -2,7 +2,11 @@
 <resources>
 
     <string name="app_name">GlassFace</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_meet">Meet</string>
+    <string name="blank_text"></string>
+    <string name="prompt_text">ok glass, meet&#8230;</string>
+    <string name="hint_text">\" ok glass \"</string>
+    <string name="hint_yes">Yes</string>
+    <string name="hint_no">No</string>
 
 </resources>
