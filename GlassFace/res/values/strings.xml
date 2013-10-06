@@ -5,6 +5,7 @@
     <string name="capture_image_title">Capture Image</string>
     <string name="voice_name">Voices</string>
     <string name="action_meet">Meet</string>
+    <string name="show_profile_name">Say hello to</string>
     <string name="blank_text"></string>
     <string name="hero_text"></string>
     <string name="prompt_text">ok glass, meet&#8230;</string>
@@ -12,5 +13,6 @@
     <string name="hint_yes">Yes</string>
     <string name="hint_no">No</string>
     <string name="hint_capture">Take Picture</string>
+    <string name="default_user_name">User Not Found</string>
 
 </resources>

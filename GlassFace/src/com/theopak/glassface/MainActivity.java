@@ -54,6 +54,7 @@ public class MainActivity extends Activity {
   private boolean mRecognizing = false;
   static final int RECOGNIZE_SPEECH_REQUEST = 51413;
   static final int CAPTURE_IMAGE_REQUEST = 31415;
+  static final int SHOW_PROFILE_REQUEST = 22293;
   
   // Arbitrarily important IP for ~~localhost~~ Derek.
   private String server = "http://glassface.sitelineapp.com";
@@ -103,6 +104,20 @@ public class MainActivity extends Activity {
 		e.printStackTrace();
 	}
     
+//    	Log.e("requesting", "r");
+//	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//        nameValuePairs.add(new BasicNameValuePair("username", "drock"));
+//        nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
+//        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//        Log.e("presend", "p");
+//        // Execute HTTP Post Request
+//        HttpResponse response = httpclient.execute(httppost);
+//        Log.e("response", response.toString());
+//    } catch (ClientProtocolException e) {
+//        Log.e("err", e.toString());
+//    } catch (IOException e) {
+//        Log.e("oherr", e.toString());
+//    }
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
@@ -193,6 +208,7 @@ public class MainActivity extends Activity {
       Log.e("wu", data.toString());
     }
     else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+    	/*
     	Bundle extras = data.getExtras();
         Bitmap mImageBitmap = (Bitmap) extras.get("data");
         int[] pixels = null;
@@ -224,7 +240,10 @@ public class MainActivity extends Activity {
          return;
           // TODO Auto-generated catch block
         }
+        */
     	toggleSpeech();
+    	Intent showProfileIntent = new Intent(this, ShowProfileActivity.class);
+        startActivity(showProfileIntent);
     }
   }
 
