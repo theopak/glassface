@@ -9,6 +9,7 @@ package com.theopak.glassface;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -29,16 +30,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.speech.SpeechRecognizer;
-import android.speech.RecognizerIntent;
 
 
 /**
@@ -46,6 +47,7 @@ import android.speech.RecognizerIntent;
  */
 public class MainActivity extends Activity {
 	
+
   private TextView mPrompt;
   private TextView mHint;
   private Chronometer mClock;
@@ -54,10 +56,14 @@ public class MainActivity extends Activity {
   static final int CAPTURE_IMAGE_REQUEST = 31415;
   
   // Arbitrarily important IP for ~~localhost~~ Derek.
-  private String server = "http://18.111.86.219:8032";
+  private String server = "http://glassface.sitelineapp.com";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+	  
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+		StrictMode.setThreadPolicy(policy); 
 	Log.e("LETS GET STARTED!", "wooo");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_meet);
@@ -67,24 +73,36 @@ public class MainActivity extends Activity {
     mHint = (TextView) findViewById(R.id.hint);
     mHint.setTypeface(robo);
     
-    HttpClient httpclient = new DefaultHttpClient();
-    HttpPost httppost = new HttpPost(server+"/app_login/");
+//    HashMap<String, String> data = new HashMap<String, String>();
+//    data.put("username", "barker");
+//    data.put("password", "poot poot");
+//    LoginPost asyncHttpPost = new LoginPost(data);
+//    asyncHttpPost.execute("http://glassface.sitelineapp.com/app_login/");
+    
+
+    HttpClient client = new DefaultHttpClient();
+    HttpPost post = new HttpPost("http://glassface.sitelineapp.com/app_login/");
+    List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+    pairs.add(new BasicNameValuePair("key1", "value1"));
+    pairs.add(new BasicNameValuePair("key2", "vakye2"));
+    try {
+		post.setEntity(new UrlEncodedFormEntity(pairs));
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     
     try {
-    	Log.e("requesting", "r");
-	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("username", "drock"));
-        nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        Log.e("presend", "p");
-        // Execute HTTP Post Request
-        HttpResponse response = httpclient.execute(httppost);
-        Log.e("response", response.toString());
-    } catch (ClientProtocolException e) {
-        Log.e("err", e.toString());
-    } catch (IOException e) {
-        Log.e("oherr", e.toString());
-    }
+		HttpResponse response = client.execute(post);
+		Log.e("OH MY", response.toString());
+	} catch (ClientProtocolException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
