@@ -1,9 +1,13 @@
 from glassface.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import HttpResponseRedirect
 from glassface.models import GlassfaceUser
-import urllib, urllib2, time, os, json
+from social.apps.django_app.default.models import UserSocialAuth
+import requests
+import json
+import urllib, urllib2, time, os, json, random, string
 from social.apps.django_app.default.models import UserSocialAuth
 from glassface import settings
 
@@ -32,17 +36,17 @@ def logins(request):
     }
     return TemplateResponse(request, "logins/index.html", context)
 
-def twitteradd(request):
+def twitteradd(request, uidtofollow):
+    usertoadd = User.get(username=uidtofollow)
     twitterauth = UserSocialAuth.objects.get(user=request.user, provider="twitter")
-    print twitterauth.extra_data['access_token']['oauth_token']
     oauth_consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY
     oauth_token = twitterauth.extra_data['access_token']['oauth_token']
-    oauth_nonce = "91227c2566963d6ae01eb72f974e964a"
-    #oauth_nonce = "".join( [random.choice(string.letters) for i in xrange(32)])
+    #oauth_nonce = "91227c2566963d6ae01eb72f974e964a"
+    oauth_nonce = "".join([random.choice(string.letters) for i in xrange(32)])
     oauth_signature = "eGxVJXIYoG%2B9ay0A4E7QxnBHHrI%3D"
-    currenttime = "1381017251"
-    #currenttime = str(int(time.time()))
-    user_to_follow = "15378324"
+    #currenttime = "1381017251"
+    currenttime = str(int(time.time()))
+    #user_to_follow = "15378324"
 
 
     from twython import Twython
@@ -53,24 +57,21 @@ def twitteradd(request):
 
     twitter.create_friendship(user_id=user_to_follow)
 
-#     os.system("curl --request 'POST' 'https://api.twitter.com/1.1/friendships/create.json' --data 'follow=true&user_id=" + user_to_follow + "'\
-#  --header 'Authorization: OAuth oauth_consumer_key=\"" + oauth_consumer_key + "\", \
-# oauth_nonce=\"" + oauth_nonce + "\", \
-# oauth_signature=\"" + oauth_signature + "\", \
-# oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"" + currenttime + "\", \
-# oauth_token=\"" + oauth_token + "\", oauth_version=\"1.0\"' --verbose")
-
-#     print "curl --request 'POST' 'https://api.twitter.com/1.1/friendships/create.json' --data 'follow=true&user_id=" + user_to_follow + "'\
-#  --header 'Authorization: OAuth oauth_consumer_key=\"" + oauth_consumer_key + "\", \
-# oauth_nonce=\"" + oauth_nonce + "\", \
-# oauth_signature=\"" + oauth_signature + "\", \
-# oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"" + currenttime + "\", \
-# oauth_token=\"" + oauth_token + "\", oauth_version=\"1.0\"' --verbose"
-
-
     context = {
 
     }
 
-
     return TemplateResponse(request, "logins/twitter/connect.html", context)
+
+def add_to_circle(request,google_user_id,circle_id):
+    print request
+    google_api_key = "AIzaSyA6YjQwwDPZ52y8ejL9oemcvAc6rnAwwig"
+    user = request.user
+    user_social_auth = UserSocialAuth.objects.get(provider="google-oauth2",user=user)
+    r = requests.get("https://www.googleapis.com/plusDomains/v1/people/"+google_user_id+"/audiences?key="+google_api_key,
+        headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
+    print user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]
+    # r = requests.put("https://www.googleapis.com/plusDomains/v1/circles/"+circle_id
+    #     +"/people?userId="+google_user_id+"&key="+google_api_key,
+    #     headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
+    return HttpResponse(r.text)

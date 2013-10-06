@@ -7,10 +7,11 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'glassface.views.logins', name='home'),
-    url(r'^twitteradd/$', 'glassface.views.twitteradd'),
+    url(r'^twitteradd/([a-zA-Z0-9]+)$', 'glassface.views.twitteradd'),
     # url(r'^glassface/', include('glassface.foo.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^accounts/signup/$', 'glassface.views.create_user'),
+    url(r'^test_google/(?P<google_user_id>[^/]+)/(?P<circle_id>[^/]+)/$','glassface.views.add_to_circle'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^facebook/add/(.+)/$', 'glassface.facebookfriender.views.add'),
     # Uncomment the admin/doc line below to enable admin documentation:

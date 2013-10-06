@@ -9,13 +9,13 @@ package com.theopak.glassface;
 
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
-//import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.hardware.Camera;
-import android.content.Intent;
+//import android.os.SystemClock;
 //import android.text.format.Time;
 //android.speech.SpeechRecognizer
 
@@ -37,13 +37,16 @@ public class MainActivity extends Activity {
     setContentView(R.layout.activity_meet);
     
     mPrompt = (TextView) findViewById(R.id.prompt);
+    Typeface robo = Typeface.createFromAsset(this.getAssets(), "Roboto-Thin.ttf");
     mHint = (TextView) findViewById(R.id.hint);
+    mHint.setTypeface(robo);
 
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
     //   Code partially via <stackoverflow.com/a/17183740>
     mClock = (Chronometer) findViewById(R.id.chrono);
+    mClock.setTypeface(robo);
     /*
     mClock.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
         @Override
