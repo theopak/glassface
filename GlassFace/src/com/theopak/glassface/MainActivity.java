@@ -10,9 +10,11 @@ package com.theopak.glassface;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.KeyEvent;
+import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.DigitalClock;
+import android.text.format.Time;
 //android.speech.SpeechRecognizer
 
 
@@ -23,7 +25,7 @@ public class MainActivity extends Activity {
 	
   private TextView mPrompt;
   private TextView mHint;
-  private DigitalClock mClock;
+  private Chronometer mClock;
   private boolean mStarted = false;
 
   @Override
@@ -34,9 +36,28 @@ public class MainActivity extends Activity {
     mPrompt = (TextView) findViewById(R.id.prompt);
     mHint = (TextView) findViewById(R.id.hint);
 
-    //mClock = (DigitalClock) findViewById(R.id.chrono);
-    //mClock.setBase(SystemClock.elapsedRealtime());
-    //mClock.start();
+    
+    // The actual time must be displayed (live) so that the device
+    //   can be "locked" into the app for repeated demonstration.
+    //   Code partially via <stackoverflow.com/a/17183740>
+    mClock = (Chronometer) findViewById(R.id.chrono);
+    /*
+    mClock.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+        @Override
+            public void onChronometerTick(Chronometer cArg) {
+            long time = System.currentTimeMillis() - cArg.getBase();
+            int h = (int)(time/3600000);
+            int m = (int)((time - h*3600000)/60000);
+            int s = (int)((time - h*3600000- m*60000)/1000) ;
+            String hh = h < 10 ? "0"+h: h+"";
+            String mm = m < 10 ? "0"+m: m+"";
+            String ss = s < 10 ? "0"+s: s+"";
+            cArg.setText(hh+":"+mm+":"+ss);
+        }
+    });
+    mClock.setBase(SystemClock.elapsedRealtime());
+    */
+    mClock.start();
   }
 
   /**

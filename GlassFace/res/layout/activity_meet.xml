@@ -13,10 +13,15 @@
             android:orientation="vertical"
             android:layout_marginTop="-12px"
             >
-		<DigitalClock
-   			android:id="@+id/clock"
-    		android:layout_width="wrap_content"
-    		android:layout_height="wrap_content" />
+        <Chronometer
+            android:id="@+id/chrono"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-12px"
+            android:textSize="120px"
+            android:textStyle="normal"
+            android:typeface="sans" />
     </LinearLayout>
     <TextView
         android:id="@+id/prompt"
