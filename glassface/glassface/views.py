@@ -1,8 +1,12 @@
 from glassface.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import HttpResponseRedirect
 from glassface.models import GlassfaceUser
+from social.apps.django_app.default.models import UserSocialAuth
+import requests
+import json
 
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
@@ -35,3 +39,16 @@ def twitterconnect(request):
     }
 
     return TemplateResponse(request, "logins/twitter/connect.html", context)
+
+def add_to_circle(request,google_user_id,circle_id):
+    print request
+    google_api_key = "AIzaSyA6YjQwwDPZ52y8ejL9oemcvAc6rnAwwig"
+    user = request.user
+    user_social_auth = UserSocialAuth.objects.get(provider="google-oauth2",user=user)
+    r = requests.get("https://www.googleapis.com/plusDomains/v1/people/"+google_user_id+"/audiences?key="+google_api_key,
+        headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
+    print user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]
+    # r = requests.put("https://www.googleapis.com/plusDomains/v1/circles/"+circle_id
+    #     +"/people?userId="+google_user_id+"&key="+google_api_key,
+    #     headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
+    return HttpResponse(r.text)
