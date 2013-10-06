@@ -1,37 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if guest %}
-	<div class="jumbotron">
-	  <div class="container">
-	    <p><em>Glassface</em> is an app that lets you add friends to social networks by taking pictures of their face with Google Glass. It's the future.</p>
-	  </div>
+
+	{% if guest %}
+		<div class="jumbotron">
+			<div class="container">
+				<p><em>Glassface</em> is an app that lets you add friends to social networks by taking pictures of their face with Google Glass. It's the future.</p>
+			</div>
+		</div>
+	{% else %}
+
+	<img src="{{ profile_url }}" />
+
+	<div class="col-xs-12">
+		{% if twitter_registered %}
+			<span class=".glyphicon .glyphicon-ok"></span> Twitter account linked <a href="{% url 'destroy' "twitter" %}">(unlink)</a><br>
+		{% else %}
+			<a href="{% url 'social:begin' "twitter" %}">Link your Twitter account</a><br>
+		{% endif %}
+
+		{% if facebook_registered %}
+			Your Facebook account is linked! <a href="{% url 'destroy' "facebook" %}">Unlink</a><br>
+		{% else %}
+			<a href="{% url 'glassface.views.linkfacebook' %}">Link your Facebook account</a><br>
+		{% endif %}
+
+		{% if google_registered %}
+			<span class=".glyphicon .glyphicon-ok"></span> Google&plus; account linked <a href="{% url 'destroy' "google-oauth2" %}">(unlink)</a><br>
+		{% else %}
+			<a href="{% url 'social:begin' "google-oauth2" %}">Link your Google&plus; account</a><br>
+		{% endif %}
 	</div>
-{% else %}
-	<img src="{{profile_url}}" />
-	<p>
-	{% if twitter_registered %}
-		<span class=".glyphicon .glyphicon-ok"></span> Twitter account linked <a href="{% url 'destroy' "twitter" %}">(unlink)</a><br>
-	{% else %}
-		<a href="{% url 'social:begin' "twitter" %}">Link your Twitter account</a><br>
-	{% endif %}
-<<<<<<< HEAD
 
-	{% if facebook_registered %}
-		Your Facebook account is linked! <a href="{% url 'destroy' "facebook" %}">Unlink</a><br>
-	{% else %}
-		<a href="{% url 'glassface.views.linkfacebook' %}">Link your Facebook account</a><br>
-	{% endif %}
-
-
-=======
-</p><p>
->>>>>>> 13844e18863a69fbf5820afd73209b6ce69817f8
-	{% if google_registered %}
-		<span class=".glyphicon .glyphicon-ok"></span> Google&plus; account linked <a href="{% url 'destroy' "google-oauth2" %}">(unlink)</a><br>
-	{% else %}
-		<a href="{% url 'social:begin' "google-oauth2" %}">Link your Google&plus; account</a><br>
-	{% endif %}
-</p>
 {% endif %}
 {% endblock %}

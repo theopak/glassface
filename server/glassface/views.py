@@ -159,6 +159,7 @@ def app_identify(request):
     response['user'] = usertoadd.get_full_name()
     response['uid'] = usertoadd.pk
     response['match'] = 'True'
+    response['profilepic'] = usertoadd.profile_picture.filename
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def app_confirm(request):
