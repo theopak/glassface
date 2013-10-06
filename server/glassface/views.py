@@ -10,6 +10,8 @@ import json
 import urllib, urllib2, time, os, json, random, string
 from social.apps.django_app.default.models import UserSocialAuth
 from glassface import settings
+import cStringIO
+import base64
 
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
@@ -36,8 +38,8 @@ def logins(request):
     }
     return TemplateResponse(request, "logins/index.html", context)
 
-def twitteradd(request, uidtofollow):
-    usertoadd = User.get(username=uidtofollow)
+def twitteradd(request, usertoadd):
+    #usertoadd = User.get(username=uidtofollow)
     twitterauth = UserSocialAuth.objects.get(user=request.user, provider="twitter")
     oauth_consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY
     oauth_token = twitterauth.extra_data['access_token']['oauth_token']
@@ -55,13 +57,17 @@ def twitteradd(request, uidtofollow):
                       twitterauth.extra_data['access_token']['oauth_token'],
                       twitterauth.extra_data['access_token']['oauth_token_secret'])
 
-    twitter.create_friendship(user_id=user_to_follow)
+    try:
+        useridtofollow = UserSocialAuth.objects.get(user=usertoadd, provider="twitter").extra_data['id']
+    except:
+        return False
 
-    context = {
+    try:
+        twitter.create_friendship(user_id=useridtofollow)
+    except:
+        return False
 
-    }
-
-    return TemplateResponse(request, "logins/twitter/connect.html", context)
+    return True
 
 def add_to_circle(request,google_user_id,circle_id):
     print request
@@ -75,3 +81,13 @@ def add_to_circle(request,google_user_id,circle_id):
     #     +"/people?userId="+google_user_id+"&key="+google_api_key,
     #     headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
     return HttpResponse(r.text)
+
+def process_photo(request):
+#def process_photo(request,image):
+    #file_like = cStringIO.StringIO(base64.b64decode(image))
+    #user = glassface.recognition.recognize(file_like)
+    user = User.objects.get(pk=4)
+    output = ({})
+    output['twitter'] = twitteradd(request, user)
+    print output
+    return HttpResponse(output)
