@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,11 +50,27 @@ public class ShowProfileActivity extends Activity {
     	//mUserTagline.setText(R.string.default_user_name);
     	ImageView mUserPicture =(ImageView)findViewById(R.id.user_picture);
         Drawable drawable = LoadImageFromWeb("http://www.google.com/images/srpr/logo6w.png");
-        mUserPicture.setImageDrawable(drawable);
+        //mUserPicture.setImageDrawable(drawable);
     }
     
     @Override     
     public void onDestroy() {   
        super.onDestroy();  
-    }   
+    }
+    
+    /**
+     * Handle the tap event from the touchpad.
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+      switch (keyCode) {
+      // Handle tap events.
+      case KeyEvent.KEYCODE_DPAD_CENTER:
+      case KeyEvent.KEYCODE_ENTER:
+        finish();
+        return true;
+      default:
+        return super.onKeyDown(keyCode, event);
+      }
+    }
 }

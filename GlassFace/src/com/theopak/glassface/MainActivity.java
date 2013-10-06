@@ -8,6 +8,7 @@
 package com.theopak.glassface;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -22,9 +23,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -32,6 +36,7 @@ import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
@@ -54,6 +59,9 @@ public class MainActivity extends Activity {
   
   // Arbitrarily important IP for ~~localhost~~ Derek.
   private String server = "http://glassface.sitelineapp.com";
+  
+  //Storage for User JSON
+  private JSONObject mUser = new JSONObject();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +83,9 @@ public class MainActivity extends Activity {
 //    data.put("password", "poot poot");
 //    LoginPost asyncHttpPost = new LoginPost(data);
 //    asyncHttpPost.execute("http://glassface.sitelineapp.com/app_login/");
-    
 
     HttpClient client = new DefaultHttpClient();
-    HttpPost post = new HttpPost("http://glassface.sitelineapp.com/app_login/");
+    HttpPost post = new HttpPost(server + "/app_login/");
     List<NameValuePair> pairs = new ArrayList<NameValuePair>();
     pairs.add(new BasicNameValuePair("key1", "value1"));
     pairs.add(new BasicNameValuePair("key2", "vakye2"));
@@ -100,20 +107,21 @@ public class MainActivity extends Activity {
 		e.printStackTrace();
 	}
     
-//    	Log.e("requesting", "r");
-//	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//        nameValuePairs.add(new BasicNameValuePair("username", "drock"));
-//        nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
-//        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//        Log.e("presend", "p");
-//        // Execute HTTP Post Request
-//        HttpResponse response = httpclient.execute(httppost);
-//        Log.e("response", response.toString());
-//    } catch (ClientProtocolException e) {
-//        Log.e("err", e.toString());
-//    } catch (IOException e) {
-//        Log.e("oherr", e.toString());
-//    }
+    try {
+    	Log.e("requesting", "r");
+	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("username", "drock"));
+        nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
+        post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        Log.e("presend", "p");
+        // Execute HTTP Post Request
+        HttpResponse response = client.execute(post);
+        Log.e("response", response.toString());
+    } catch (ClientProtocolException e) {
+        Log.e("err", e.toString());
+    } catch (IOException e) {
+        Log.e("oherr", e.toString());
+    }
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
@@ -202,29 +210,21 @@ public class MainActivity extends Activity {
     if (requestCode == RECOGNIZE_SPEECH_REQUEST && resultCode == RESULT_OK) {
       captureImage();
       Log.e("wu", data.toString());
-    }
-    else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+    } else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
     	/*
-    	Bundle extras = data.getExtras();
-        Bitmap mImageBitmap = (Bitmap) extras.get("data");
-        int[] pixels = null;
-        mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
-              
-        ByteBuffer byteBuffer = ByteBuffer.allocate(pixels.length * 4);        
-        IntBuffer intBuffer = byteBuffer.asIntBuffer();
-        intBuffer.put(pixels);
-
-        byte[] pixBytes = byteBuffer.array();
-
-        Base64.encodeToString(pixBytes, Base64.DEFAULT);
-              
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(server+"/recognize/");
+    	Bitmap bm = BitmapFactory.decodeFile("/DCIM/Camera/20131006_002939_273_1.jpg");
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+    	bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    	//byte[] b = baos.toByteArray();
+    	String encodedImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+    	
+    	HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(server+"/app_identify/");
                 
         try {
           List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-          nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-          nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
+          //nameValuePairs.add(new BasicNameValuePair("photo", encodedImage));
+          nameValuePairs.add(new BasicNameValuePair("username", "admin"));
           httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
           // Execute HTTP Post Request
@@ -238,8 +238,34 @@ public class MainActivity extends Activity {
         }
         */
     	Intent showProfileIntent = new Intent(this, ShowProfileActivity.class);
-        startActivity(showProfileIntent);
+        startActivityForResult(showProfileIntent, SHOW_PROFILE_REQUEST);
     	toggleSpeech();
+    } else if (requestCode == SHOW_PROFILE_REQUEST) {
+    	/*
+    	HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(server + "/app_confirm/");
+        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+        try {
+            pairs.add(new BasicNameValuePair("uid", mUser.getString("uid")));
+            pairs.add(new BasicNameValuePair("username", mUser.getString("username")));
+    		post.setEntity(new UrlEncodedFormEntity(pairs));
+    	} catch (Exception e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+        
+        try {
+    		HttpResponse response = client.execute(post);
+    		Log.e("OH MY 2", response.toString());
+    	} catch (ClientProtocolException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+        */
+    	return;
     }
   }
 
