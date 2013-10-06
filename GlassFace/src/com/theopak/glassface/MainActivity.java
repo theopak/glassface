@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
   private TextView mHint;
   private Chronometer mClock;
   private boolean mRecognizing = false;
-  static final int RECOGNIZE_VOICE_REQUEST = 0;
+  static final int RECOGNIZE_SPEECH_REQUEST = 0;
   static final int CAPTURE_IMAGE_REQUEST = 0;
 
   @Override
@@ -98,17 +98,25 @@ public class MainActivity extends Activity {
    * Toggle the Speech states.
    */
   private void toggleSpeech() {
-    if (mRecognizing) {
+    if (!mRecognizing) {
       mPrompt.setText(R.string.prompt_text);
       mHint.setText(R.string.blank_text);
-      mClock.setText(R.string.blank_text);
-      Intent recognizeSpeechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-  	  startActivityForResult(recognizeSpeechIntent, RECOGNIZE_VOICE_REQUEST);
+      mClock.setTextColor(getResources().getColor(R.color.transparent));
+      recognizeSpeech();
     } else {
       mPrompt.setText(R.string.blank_text);
       mHint.setText(R.string.hint_text);
+      mClock.setTextColor(getResources().getColor(R.color.white));
     }
     mRecognizing = !mRecognizing;
+  }
+  
+  /** 
+   * Return data.
+   */
+  private void recognizeSpeech() {
+    Intent recognizeSpeechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+  	startActivityForResult(recognizeSpeechIntent, RECOGNIZE_SPEECH_REQUEST);
   }
   
   /**
@@ -130,13 +138,17 @@ public class MainActivity extends Activity {
   
   /**
    * Handle activity result(s).
+   * Refer to the docs at: 
+   * http://developer.android.com/reference/android/app/Activity.html#onActivityResult(int, int, android.content.Intent)
    */
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == RECOGNIZE_VOICE_REQUEST && resultCode == RESULT_OK) {
+    if (requestCode == RECOGNIZE_SPEECH_REQUEST && resultCode == RESULT_OK) {
       captureImage();
+      Log.e(data.toString(), "wu");
     }
-    else if (requestCode == CAPTURE_IMAGE_REQUEST ) {
+    else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
       sendImage();
+      toggleSpeech();
     }
   }
 
