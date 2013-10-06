@@ -35,6 +35,8 @@ DATABASES = {
     }
 }
 
+AUTH_PROFILE_MODULE = 'glassface.GlassfaceUser'
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -156,6 +158,7 @@ INSTALLED_APPS = (
     'glassface.recognition',
     'glassface',
     'social.apps.django_app.default',
+    'south',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

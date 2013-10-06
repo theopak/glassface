@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^accounts/signup/$', 'glassface.views.create_user'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',{'template_name': 'base.html'}),
+    url(r'^facebook/add/(.+)/$', 'glassface.facebookfriender.views.add'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

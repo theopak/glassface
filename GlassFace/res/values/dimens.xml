@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <dimen name="prompt_text_size">30px</dimen>
+    <dimen name="hero_text_size">70px</dimen>
+    <dimen name="default_margin">40px</dimen>
+    <dimen name="footer_bottom_margin">29px</dimen>
+    <dimen name="footer_text_size">30px</dimen>
+    
+</resources>
