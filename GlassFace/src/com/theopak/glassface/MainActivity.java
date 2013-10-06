@@ -10,11 +10,13 @@ package com.theopak.glassface;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.SystemClock;
+//import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.text.format.Time;
+import android.hardware.Camera;
+import android.content.Intent;
+//import android.text.format.Time;
 //android.speech.SpeechRecognizer
 
 
@@ -26,7 +28,8 @@ public class MainActivity extends Activity {
   private TextView mPrompt;
   private TextView mHint;
   private Chronometer mClock;
-  private boolean mStarted = false;
+  private boolean mRecognizing = false;
+  private boolean mCapturing = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +81,8 @@ public class MainActivity extends Activity {
 
   @Override
   public void onDestroy() {
-	if (mStarted) {
-	  mStarted = false;
+	if (mRecognizing) {
+		mRecognizing = false;
 	}
     super.onDestroy();
   }
@@ -88,14 +91,24 @@ public class MainActivity extends Activity {
    * Toggle the Speech states.
    */
   private void toggleSpeech() {
-    if (mStarted) {
+    if (mRecognizing) {
       mPrompt.setText(R.string.prompt_text);
       mHint.setText(R.string.blank_text);
     } else {
       mPrompt.setText(R.string.blank_text);
       mHint.setText(R.string.hint_text);
     }
-    mStarted = !mStarted;
+    mRecognizing = !mRecognizing;
+    captureImage();
+  }
+  
+  /**
+   * Capture a picture and then return to the base state.
+   */
+  private void captureImage() {
+	Intent intent = new Intent(getApplicationContext(), com.theopak.glassface.Custom_CameraActivity.class);
+	startActivity(intent);
+    finish();
   }
 
 }

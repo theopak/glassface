@@ -9,5 +9,6 @@
     <string name="hint_text">\" ok glass \"</string>
     <string name="hint_yes">Yes</string>
     <string name="hint_no">No</string>
+    <string name="hint_capture">Take Picture</string>
 
 </resources>
