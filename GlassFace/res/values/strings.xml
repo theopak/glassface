@@ -9,7 +9,7 @@
     <string name="blank_text"></string>
     <string name="hero_text"></string>
     <string name="prompt_text">ok glass, meet&#8230;</string>
-    <string name="hint_text">\" ok fake glass \"</string>
+    <string name="hint_text"></string>
     <string name="hint_yes">Yes</string>
     <string name="hint_no">No</string>
     <string name="hint_capture">Take Picture</string>
