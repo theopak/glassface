@@ -8,10 +8,15 @@
 package com.theopak.glassface;
 
 
+import java.util.TimeZone;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
 import android.widget.TextView;
@@ -33,6 +38,7 @@ public class MainActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+	Log.e("LETS GET STARTED!", "wooo");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_meet);
     
@@ -47,22 +53,19 @@ public class MainActivity extends Activity {
     //   Code partially via <stackoverflow.com/a/17183740>
     mClock = (Chronometer) findViewById(R.id.chrono);
     mClock.setTypeface(robo);
-    /*
     mClock.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
         @Override
-            public void onChronometerTick(Chronometer cArg) {
-            long time = System.currentTimeMillis() - cArg.getBase();
-            int h = (int)(time/3600000);
-            int m = (int)((time - h*3600000)/60000);
-            int s = (int)((time - h*3600000- m*60000)/1000) ;
-            String hh = h < 10 ? "0"+h: h+"";
-            String mm = m < 10 ? "0"+m: m+"";
-            String ss = s < 10 ? "0"+s: s+"";
-            cArg.setText(hh+":"+mm+":"+ss);
+        public void onChronometerTick(Chronometer cArg) {
+            long time = System.currentTimeMillis();
+            java.text.DateFormat df = DateFormat.getTimeFormat(getApplicationContext());
+            df.setTimeZone(TimeZone.getTimeZone("GMT-4:00"));
+            String woo = df.format(time);
+            woo = woo.substring(0, woo.length() - 2);
+            cArg.setText(woo);
         }
     });
     mClock.setBase(SystemClock.elapsedRealtime());
-    */
+    
     mClock.start();
   }
 
