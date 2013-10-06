@@ -144,9 +144,12 @@ def app_login(request):
     print request.POST['password']
     response = {}
     if user is not None:
-        response['result'] = 'success'
+        #response['result'] = 'success'
+        return HttpResponse(":)")
     else:
-        response['result'] = 'fail'
+        #response['result'] = 'fail'
+        return HttpResponse(":(")
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def app_identify(request):
