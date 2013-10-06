@@ -100,12 +100,26 @@ def add_to_circle(request,google_user_id,circle_id):
         headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
     return HttpResponse(r.text)
 
-def process_photo(request):
-#def process_photo(request,image):
-    #file_like = cStringIO.StringIO(base64.b64decode(image))
-    #user = glassface.recognition.recognize(file_like)
-    user = User.objects.get(pk=4)
-    output = ({})
-    output['twitter'] = twitteradd(request, user)
-    print output
-    return HttpResponse(output)
+def app_login(request):
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    response = {}
+    if user is not None:
+        response['result'] = 'success'
+    else:
+        response['result'] = 'fail'
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def app_identify(request):
+    print request.user
+    file_like = cStringIO.StringIO(base64.b64decode(request.POST['image']))
+    usertoadd = glassface.recognition.recognize(file_like)
+    #user = User.objects.get(pk=4)
+    response = {}
+    #response['twitter'] = twitteradd(request, usertoadd)
+    response['user'] = usertoadd.get_full_name()
+    response['uid'] = usertoadd.pk
+    response['match'] = 'True'
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def app_confirm(request):
+    
