@@ -16,16 +16,20 @@ import cStringIO
 import base64
 from django.contrib.auth import authenticate
 
+from requests import Session, Request
+
+
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
         form = user_creation_form(data=request.POST or None)
-        if form.is_valid():
+        #if form.is_valid():
             # Okay, security check complete. Log the user in.
-            new_user = user_creation_form.save(form) # creates django User
-            gfu = GlassfaceUser(user=new_user)
-            gfu.save()
+        new_user = user_creation_form.save(form) # creates django User
+        gfu = GlassfaceUser(user=new_user,profile_picture=form.cleaned_data.get('profile_url'))
+        gfu.save()
 
-            return HttpResponseRedirect("/")
+        return HttpResponseRedirect("/")
+        print form.is_valid()
     else:
         form = user_creation_form()
 
@@ -35,6 +39,7 @@ def create_user(request, user_creation_form=UserCreationForm):
     return TemplateResponse(request, "registration/signup.html", context)
 
 def destroy(request,backend):
+<<<<<<< HEAD
     if backend == "facebook":
         gfu = GlassfaceUser.objects.get(user=request.user)
         gfu.facebook_email = ""
@@ -44,6 +49,11 @@ def destroy(request,backend):
         user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
         user_auth_to_destroy.delete()
     return HttpResponseRedirect("/") 
+=======
+    user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
+    user_auth_to_destroy.delete()
+    return HttpResponseRedirect("/")
+>>>>>>> 13844e18863a69fbf5820afd73209b6ce69817f8
 
 def splash(request):
     if request.user.is_authenticated():
@@ -59,8 +69,11 @@ def splash(request):
         context = {
             'twitter_registered': twitterreg,
             'google_registered': googlereg,
+            'profile_url':urllib.unquote((GlassfaceUser.objects.get(user=request.user).profile_picture.url))
         }
+        print context["profile_url"]
     else:
+        print request.user
         context = {
             'guest': True,
         }
@@ -116,12 +129,13 @@ def twitteradd(request, usertoadd):
     return True
 
 def add_to_circle(request,google_user_id,circle_id):
-    print request
     google_api_key = "AIzaSyA8ey1d6QYkcTSxeD2dAeP4B3NafzzS34Y"
     user = request.user
     user_social_auth = UserSocialAuth.objects.get(provider="google-oauth2",user=user)
+
     r = requests.put("https://www.googleapis.com/plusDomains/v1/circles/"+circle_id
-        +"/people?userId="+google_user_id+"&key="+google_api_key,
+        +"/people",
+        params={"userId":google_user_id,"key":google_api_key},
         headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
     return HttpResponse(r.text)
 

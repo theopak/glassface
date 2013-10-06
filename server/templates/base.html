@@ -22,11 +22,11 @@
   <body>
     <div class="container">
       <div class="page-header clearfix" style="position:relative">
-        <h1 class="pull-left">Glassface <small>Subtext for header</small></h1>
+        <h1 class="pull-left">Glassface <small>Social networking with faces</small></h1>
         {% if user.is_authenticated %}
-          <h4 class="pull-right" style="position:absolute;right:0;bottom:12px"><a href="{% url "django.contrib.auth.views.logout" %}">Log Out</a></h4>
+          <h4 class="pull-right" style="position:absolute;right:0;bottom:12px"><a href="{% url "django.contrib.auth.views.logout" %}"><span class=".glyphicon .glyphicon-log-out"></span> Logout</a></h4>
         {% else %}
-          <h4 class="pull-right" style="position:absolute;right:0;bottom:12px"><a href="{% url "django.contrib.auth.views.login" %}">Log In</a></h4>
+          <h4 class="pull-right" style="position:absolute;right:0;bottom:12px"><a href="{% url "django.contrib.auth.views.login" %}"><span class=".glyphicon .glyphicon-log-in"></span> Login</a></h4>
         {% endif %}
       </div>
 
