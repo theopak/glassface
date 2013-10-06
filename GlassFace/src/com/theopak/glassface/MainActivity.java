@@ -50,10 +50,10 @@ public class MainActivity extends Activity {
   private TextView mHint;
   private Chronometer mClock;
   private boolean mRecognizing = false;
-  private boolean mCapturing = false;
-  static final int RECOGNIZE_VOICE_REQUEST = 0;
-  static final int CAPTURE_IMAGE_REQUEST = 0;
+  static final int RECOGNIZE_SPEECH_REQUEST = 51413;
+  static final int CAPTURE_IMAGE_REQUEST = 31415;
   
+  // Arbitrarily important IP for ~~localhost~~ Derek.
   private String server = "http://18.111.86.219:8032";
 
   @Override
@@ -66,8 +66,6 @@ public class MainActivity extends Activity {
     Typeface robo = Typeface.createFromAsset(this.getAssets(), "Roboto-Thin.ttf");
     mHint = (TextView) findViewById(R.id.hint);
     mHint.setTypeface(robo);
-    
-    
     
     HttpClient httpclient = new DefaultHttpClient();
     HttpPost httppost = new HttpPost(server+"/app_login/");
@@ -87,10 +85,6 @@ public class MainActivity extends Activity {
     } catch (IOException e) {
         Log.e("oherr", e.toString());
     }
-
-    
-    
-    
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
@@ -109,7 +103,6 @@ public class MainActivity extends Activity {
         }
     });
     mClock.setBase(SystemClock.elapsedRealtime());
-    
     mClock.start();
   }
 
@@ -141,80 +134,79 @@ public class MainActivity extends Activity {
    * Toggle the Speech states.
    */
   private void toggleSpeech() {
+	mRecognizing = !mRecognizing;
     if (mRecognizing) {
       mPrompt.setText(R.string.prompt_text);
       mHint.setText(R.string.blank_text);
-      mClock.setText(R.string.blank_text);
-      Intent recognizeSpeechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-  	  startActivityForResult(recognizeSpeechIntent, RECOGNIZE_VOICE_REQUEST);
+      mClock.setTextColor(getResources().getColor(R.color.transparent));
+      recognizeSpeech();
     } else {
       mPrompt.setText(R.string.blank_text);
       mHint.setText(R.string.hint_text);
+      mClock.setTextColor(getResources().getColor(R.color.white));
     }
-    mRecognizing = !mRecognizing;
+  }
+  
+  /** 
+   * Return data.
+   */
+  private void recognizeSpeech() {
+    Intent recognizeSpeechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+  	startActivityForResult(recognizeSpeechIntent, RECOGNIZE_SPEECH_REQUEST);
   }
   
   /**
    * Capture a picture and then return to the base state.
    */
   private void captureImage() {
-	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    startActivityForResult(takePictureIntent, 31415);
-	    //finish();
-  }
-  
-  /**
-   * Send a captured picture to the web service.
-   */
-  private void sendImage() {
-    // TODO
-	return;
+    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
+    //finish();
   }
   
   /**
    * Handle activity result(s).
+   * Refer to the docs at: 
+   * http://developer.android.com/reference/android/app/Activity.html#onActivityResult(int, int, android.content.Intent)
    */
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == RECOGNIZE_VOICE_REQUEST && resultCode == RESULT_OK) {
+    if (requestCode == RECOGNIZE_SPEECH_REQUEST && resultCode == RESULT_OK) {
       captureImage();
+      Log.e("wu", data.toString());
     }
-    else if (requestCode == CAPTURE_IMAGE_REQUEST ) {
-        if (requestCode == 31415) {
-            if (resultCode == RESULT_OK) {
-              Bundle extras = data.getExtras();
-              Bitmap mImageBitmap = (Bitmap) extras.get("data");
-              int[] pixels = null;
-              mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
+    else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+    	Bundle extras = data.getExtras();
+        Bitmap mImageBitmap = (Bitmap) extras.get("data");
+        int[] pixels = null;
+        mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
               
-              
-                ByteBuffer byteBuffer = ByteBuffer.allocate(pixels.length * 4);        
-                IntBuffer intBuffer = byteBuffer.asIntBuffer();
-                intBuffer.put(pixels);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(pixels.length * 4);        
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        intBuffer.put(pixels);
 
-                byte[] pixBytes = byteBuffer.array();
+        byte[] pixBytes = byteBuffer.array();
 
+        Base64.encodeToString(pixBytes, Base64.DEFAULT);
               
-              Base64.encodeToString(pixBytes, Base64.DEFAULT);
-              
-              HttpClient httpclient = new DefaultHttpClient();
-              HttpPost httppost = new HttpPost(server+"/recognize/");
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(server+"/recognize/");
                 
-              try {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                  nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-                  nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
-                  httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-  
-                  // Execute HTTP Post Request
-                  HttpResponse response = httpclient.execute(httppost);
-              } catch (ClientProtocolException e) {
-                  // TODO Auto-generated catch block
-              } catch (IOException e) {
-                  // TODO Auto-generated catch block
-              }
+        try {
+          List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+          nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+          nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
+          httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-            }
+          // Execute HTTP Post Request
+          HttpResponse response = httpclient.execute(httppost);
+        } catch (ClientProtocolException e) {
+        return;
+          // TODO Auto-generated catch block
+        } catch (IOException e) {
+         return;
+          // TODO Auto-generated catch block
         }
+    	toggleSpeech();
     }
   }
 
