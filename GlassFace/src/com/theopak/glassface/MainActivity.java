@@ -52,6 +52,7 @@ public class MainActivity extends Activity {
   private boolean mRecognizing = false;
   static final int RECOGNIZE_SPEECH_REQUEST = 51413;
   static final int CAPTURE_IMAGE_REQUEST = 31415;
+  static final int SHOW_PROFILE_REQUEST = 22293;
   
   // Arbitrarily important IP for ~~localhost~~ Derek.
   private String server = "http://18.111.86.219:8032";
@@ -67,6 +68,7 @@ public class MainActivity extends Activity {
     mHint = (TextView) findViewById(R.id.hint);
     mHint.setTypeface(robo);
     
+    /*
     HttpClient httpclient = new DefaultHttpClient();
     HttpPost httppost = new HttpPost(server+"/app_login/");
     
@@ -85,6 +87,7 @@ public class MainActivity extends Activity {
     } catch (IOException e) {
         Log.e("oherr", e.toString());
     }
+    */
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
@@ -175,6 +178,7 @@ public class MainActivity extends Activity {
       Log.e("wu", data.toString());
     }
     else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+    	/*
     	Bundle extras = data.getExtras();
         Bitmap mImageBitmap = (Bitmap) extras.get("data");
         int[] pixels = null;
@@ -206,7 +210,10 @@ public class MainActivity extends Activity {
          return;
           // TODO Auto-generated catch block
         }
+        */
     	toggleSpeech();
+    	Intent showProfileIntent = new Intent(this, ShowProfileActivity.class);
+        startActivity(showProfileIntent);
     }
   }
 

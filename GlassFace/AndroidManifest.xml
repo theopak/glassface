@@ -26,8 +26,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VoiceActivity"
-            android:label="@string/voice_name" >
+            android:name=".ShowProfileActivity"
+            android:label="@string/show_profile_name" >
         </activity>
     </application>
 
