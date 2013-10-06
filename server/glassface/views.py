@@ -120,11 +120,21 @@ def app_identify(request):
     usertoadd = glassface.recognition.recognize(file_like)
     #user = User.objects.get(pk=4)
     response = {}
-    #response['twitter'] = twitteradd(request, usertoadd)
     response['user'] = usertoadd.get_full_name()
     response['uid'] = usertoadd.pk
     response['match'] = 'True'
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def app_confirm(request):
-    
+    print request.user
+    response = {}
+    response['connected'] = {}
+    usertoadd = User.objects.get(pk=request.POST['uid'])
+    response['connected']['twitter'] = twitteradd(request, usertoadd)
+    # Facebook add
+    # G+ add
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+    # uid
+    # username
+    # { connected: {'facebook', 'twitter'} }
