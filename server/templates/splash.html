@@ -4,7 +4,7 @@
 {% if guest %}
 	Here's some filler text on why you should join Glassface!
 {% else %}
-	<img src="{{profile_url}}" width=300 max-height=500 />
+	<img src="{{profile_url}}" />
 	<p>
 	{% if twitter_registered %}
 		Your Twitter account is linked! <a href="{% url 'destroy' "twitter" %}">Unlink</a><br>

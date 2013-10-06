@@ -12,9 +12,9 @@ from social.apps.django_app.default.models import UserSocialAuth
 from glassface import settings
 import cStringIO
 import base64
+from glassface import recognition
 
 from requests import Session, Request
-
 
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
@@ -22,9 +22,14 @@ def create_user(request, user_creation_form=UserCreationForm):
         #if form.is_valid():
             # Okay, security check complete. Log the user in.
         new_user = user_creation_form.save(form) # creates django User
-        gfu = GlassfaceUser(user=new_user,profile_picture=form.cleaned_data.get('profile_url'))
+        gfu = GlassfaceUser(user=new_user,profile_picture1=form.cleaned_data.get('profile_url1'),
+            profile_picture2=form.cleaned_data.get('profile_url2'),
+            profile_picture3=form.cleaned_data.get('profile_url3'),
+            profile_picture4=form.cleaned_data.get('profile_url4'),
+            profile_picture5=form.cleaned_data.get('profile_url5'))
         gfu.save()
-
+        recognition.learn(new_user,[urllib.unquote(gfu.profile_picture1.url),urllib.unquote(gfu.profile_picture2.url),
+            urllib.unquote(gfu.profile_picture3.url),urllib.unquote(gfu.profile_picture4.url),urllib.unquote(gfu.profile_picture5.url)])
         return HttpResponseRedirect("/")
         print form.is_valid()
     else:
@@ -54,7 +59,7 @@ def splash(request):
         context = {
             'twitter_registered': twitterreg,
             'google_registered': googlereg,
-            'profile_url':urllib.unquote((GlassfaceUser.objects.get(user=request.user).profile_picture.url))
+            'profile_url':urllib.unquote((GlassfaceUser.objects.get(user=request.user).profile_picture1.url))
         }
         print context["profile_url"]
     else:

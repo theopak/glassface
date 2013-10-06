@@ -17,14 +17,22 @@ try:
 except:
     pass
 
-def learn(user, photos):
-    for i in range(len(photos)):
-        photos[i] = normalize(cv2.imread(photos[i], cv2.CV_LOAD_IMAGE_GRAYSCALE))
+def learn(user, urls):
+    photos = []
+    for i in range(len(urls)-1):
+        photo = urllib.urlopen(urls[i]).read()
+        f = open("PPPPPP.jpg",'w')
+        f.write(photo)
+        f.close()
+        print os.path.abspath(f.name)
+        photos.append(normalize(cv2.imread(os.path.abspath(f.name), cv2.CV_LOAD_IMAGE_GRAYSCALE)))
     ids = [user.id]*len(photos)
+    print photos[0],"HI"
     model.train(photos, ids)
     model.save(face_db_location)
 
-def recognize(photo):
+def recognize(url):
+    photo = cStringIO.StringIO(urllib.urlopen(url).read())
     photo = normalize(cv2.imread(photo, cv2.CV_LOAD_IMAGE_GRAYSCALE))
     id = model.predict(photo)
     try:
@@ -51,6 +59,7 @@ def normalize(photo):
     faces = classifier.detectMultiScale(photo)
     face = faces[0]
     cropped = photo[face[2]:face[3], face[0]:face[1]]
+    print len(cropped),len(cropped[0])
     if len(cropped) < 100 or len(cropped[0]) < 100:
         raise IOError("Face is too small")
     resized = cv2.resize(cropped, (100, 100))
