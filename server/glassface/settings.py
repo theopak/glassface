@@ -8,20 +8,17 @@ SOCIAL_AUTH_TWITTER_KEY = '4mBBsoUEZOyxTOcMkvv21w'
 SOCIAL_AUTH_TWITTER_SECRET = '7zWY1GzkeKP5JPcnfSGE7ikdv9CvRol5UrHK7Rf1MQE'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '912718038355.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'zQM4ONcsxHF0EiJv46AllL92'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/plus.circles.write'
-,'https://www.googleapis.com/auth/plus.login'
-,'https://www.googleapis.com/auth/plus.me'
-,'https://www.googleapis.com/auth/plus.circles.read'
-,'https://www.googleapis.com/auth/plus.circles.write'
-,'https://www.googleapis.com/auth/plus.media.upload'
-,'https://www.googleapis.com/auth/plus.profiles.read'
-,'https://www.googleapis.com/auth/plus.stream.read'
-,'https://www.googleapis.com/auth/plus.stream.write']
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/plus.circles.write']
 
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL = '/'
 
+#Your Filepicker.io API key goes here. To get an api key, go to https://filepicker.io
+FILEPICKER_API_KEY = 'AoVR7KjhvTym94zsIDkztz'
+
+CWD = os.getcwd()
+MEDIA_ROOT = os.path.join(CWD, 'media')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

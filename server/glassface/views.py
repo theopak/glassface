@@ -13,6 +13,9 @@ from glassface import settings
 import cStringIO
 import base64
 
+from requests import Session, Request
+
+
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
         form = user_creation_form(data=request.POST or None)
@@ -96,12 +99,13 @@ def twitteradd(request, usertoadd):
     return True
 
 def add_to_circle(request,google_user_id,circle_id):
-    print request
     google_api_key = "AIzaSyA8ey1d6QYkcTSxeD2dAeP4B3NafzzS34Y"
     user = request.user
     user_social_auth = UserSocialAuth.objects.get(provider="google-oauth2",user=user)
+
     r = requests.put("https://www.googleapis.com/plusDomains/v1/circles/"+circle_id
-        +"/people?userId="+google_user_id+"&key="+google_api_key,
+        +"/people",
+        params={"userId":google_user_id,"key":google_api_key},
         headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
     return HttpResponse(r.text)
 
