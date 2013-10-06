@@ -3,6 +3,7 @@
 
     <string name="app_name">GlassFace</string>
     <string name="capture_image_title">Capture Image</string>
+    <string name="voice_name">Voices</string>
     <string name="action_meet">Meet</string>
     <string name="blank_text"></string>
     <string name="hero_text"></string>

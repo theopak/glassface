@@ -21,9 +21,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
 import android.widget.TextView;
-//import android.os.SystemClock;
-//import android.text.format.Time;
-//android.speech.SpeechRecognizer
+import android.speech.SpeechRecognizer;
+import android.speech.RecognizerIntent;
 
 
 /**
@@ -35,7 +34,8 @@ public class MainActivity extends Activity {
   private TextView mHint;
   private Chronometer mClock;
   private boolean mRecognizing = false;
-  private boolean mCapturing = false;
+  static final int RECOGNIZE_VOICE_REQUEST = 0;
+  static final int CAPTURE_IMAGE_REQUEST = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -101,21 +101,43 @@ public class MainActivity extends Activity {
     if (mRecognizing) {
       mPrompt.setText(R.string.prompt_text);
       mHint.setText(R.string.blank_text);
+      mClock.setText(R.string.blank_text);
+      Intent recognizeSpeechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+  	  startActivityForResult(recognizeSpeechIntent, RECOGNIZE_VOICE_REQUEST);
     } else {
       mPrompt.setText(R.string.blank_text);
       mHint.setText(R.string.hint_text);
     }
     mRecognizing = !mRecognizing;
-    captureImage();
   }
   
   /**
    * Capture a picture and then return to the base state.
    */
   private void captureImage() {
-	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    startActivityForResult(takePictureIntent, 0);
-	    finish();
+	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
+	//finish();
+  }
+  
+  /**
+   * Send a captured picture to the web service.
+   */
+  private void sendImage() {
+    // TODO
+	return;
+  }
+  
+  /**
+   * Handle activity result(s).
+   */
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == RECOGNIZE_VOICE_REQUEST && resultCode == RESULT_OK) {
+      captureImage();
+    }
+    else if (requestCode == CAPTURE_IMAGE_REQUEST ) {
+      sendImage();
+    }
   }
 
 }
