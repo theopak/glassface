@@ -1,3 +1,5 @@
+
+from glassface.facebookfriender.views import extract
 from glassface.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -12,6 +14,7 @@ from social.apps.django_app.default.models import UserSocialAuth
 from glassface import settings
 import cStringIO
 import base64
+from django.contrib.auth import authenticate
 
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
@@ -32,8 +35,14 @@ def create_user(request, user_creation_form=UserCreationForm):
     return TemplateResponse(request, "registration/signup.html", context)
 
 def destroy(request,backend):
-    user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
-    user_auth_to_destroy.delete()
+    if backend == "facebook":
+        gfu = GlassfaceUser.objects.get(user=request.user)
+        gfu.facebook_email = ""
+        gfu.facebook_pass = ""
+        gfu.facebook_id = ""
+    else:
+        user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
+        user_auth_to_destroy.delete()
     return HttpResponseRedirect("/") 
 
 def splash(request):
@@ -57,12 +66,22 @@ def splash(request):
         }
     return TemplateResponse(request, "splash.html", context)
 
-def logins(request):
-    user = request.user
-    context = {
-        'twitter_connected': False,
-    }
-    return TemplateResponse(request, "logins/index.html", context)
+# def logins(request):
+#     user = request.user
+#     context = {
+#         'twitter_connected': False,
+#     }
+#     return TemplateResponse(request, "logins/index.html", context)
+
+def linkfacebook(request):
+    context = {}
+    if request.POST:
+        print request.POST
+        gfu = GlassfaceUser.objects.get(user=request.user)
+        gfu.facebook_email = request.POST['email']
+        gfu.facebook_pass = request.POST['password']
+        gfu.facebook_id = extract(request)
+    return TemplateResponse(request, "linkfacebook.html", context)
 
 def twitteradd(request, usertoadd):
     #usertoadd = User.get(username=uidtofollow)
@@ -107,6 +126,7 @@ def add_to_circle(request,google_user_id,circle_id):
     return HttpResponse(r.text)
 
 def app_login(request):
+    return HttpResponse("FRAK")
     user = authenticate(username=request.POST['username'], password=request.POST['password'])
     print username
     print password
