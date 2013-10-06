@@ -19,13 +19,14 @@ from requests import Session, Request
 def create_user(request, user_creation_form=UserCreationForm):
     if request.method == "POST":
         form = user_creation_form(data=request.POST or None)
-        if form.is_valid():
+        #if form.is_valid():
             # Okay, security check complete. Log the user in.
-            new_user = user_creation_form.save(form) # creates django User
-            gfu = GlassfaceUser(user=new_user)
-            gfu.save()
+        new_user = user_creation_form.save(form) # creates django User
+        gfu = GlassfaceUser(user=new_user,profile_picture=form.cleaned_data.get('profile_url'))
+        gfu.save()
 
-            return HttpResponseRedirect("/")
+        return HttpResponseRedirect("/")
+        print form.is_valid()
     else:
         form = user_creation_form()
 
@@ -37,7 +38,7 @@ def create_user(request, user_creation_form=UserCreationForm):
 def destroy(request,backend):
     user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
     user_auth_to_destroy.delete()
-    return HttpResponseRedirect("/") 
+    return HttpResponseRedirect("/")
 
 def splash(request):
     if request.user.is_authenticated():
@@ -53,8 +54,11 @@ def splash(request):
         context = {
             'twitter_registered': twitterreg,
             'google_registered': googlereg,
+            'profile_url':urllib.unquote((GlassfaceUser.objects.get(user=request.user).profile_picture.url))
         }
+        print context["profile_url"]
     else:
+        print request.user
         context = {
             'guest': True,
         }
