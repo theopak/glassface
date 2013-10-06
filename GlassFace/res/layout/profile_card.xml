@@ -12,7 +12,7 @@
         android:layout_width="240px"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:src="@drawable/default_user_picture" />
     <TextView
         android:id="@+id/user_name"
         android:layout_width="330px"

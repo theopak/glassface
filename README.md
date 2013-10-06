@@ -26,3 +26,8 @@ This project uses OpenCV for facial recognition. It is required that you build O
 
 This [helpful guide](http://neatocode.tumblr.com/post/49566072064/mirroring-google-glass) describes how to use [asm.jar](asm.jar) to screen mirror.
 
+
+## Security
+
+Please excuse the glaring security holes in this prototype implementation. Don't actually use your real social network accounts with this service, which may or may not violate all the policies of everything.
+
