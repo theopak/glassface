@@ -1,15 +1,14 @@
 from django.db import models
+from django import forms
 from django.contrib.auth.models import User
 from django.contrib import admin
+import django_filepicker
 
 import os
 
-def get_image_path(instance, filename):
-    return os.path.join('photos', str(instance.id), filename)
-
 class GlassfaceUser(models.Model):
     user = models.ForeignKey(User)
-    profile_image = models.FileField(upload_to=get_image_path, blank=True, null=True)
+    profile_picture = django_filepicker.models.FPFileField(upload_to='uploads')
     facebook_email = models.CharField(max_length=255)
     facebook_pass = models.CharField(max_length=255)
 

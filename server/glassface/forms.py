@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
+import django_filepicker
 
 class UserCreationForm(forms.ModelForm):
     """
@@ -21,6 +22,7 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(label=_("Password confirmation"),
         widget=forms.PasswordInput,
         help_text=_("Enter the same password as above, for verification."))
+    profile_url = django_filepicker.forms.FPFileField()
 
     class Meta:
         model = User

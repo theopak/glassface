@@ -21,10 +21,13 @@ Opt-in to get started (we respect your privacy).
     <td>{{ form.password2.label_tag }}</td>
     <td>{{ form.password2 }}</td>
 </tr>
+<tr>
+    <td>{{ form.profile_url }}</td>
+</tr>
 
 
 </table>
-
+{{ form.media }}
 <input type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
