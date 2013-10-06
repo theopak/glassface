@@ -5,12 +5,12 @@
 	Here's some filler text on why you should join Glassface!
 {% else %}
 	{% if twitter_registered %}
-		Your Twitter account is linked! Unlink functionality may come later<br>
+		Your Twitter account is linked! <a href="{% url 'destroy' "twitter" %}">Unlink</a><br>
 	{% else %}
 		<a href="{% url 'social:begin' "twitter" %}">Link your Twitter account</a><br>
 	{% endif %}
 	{% if google_registered %}
-		Your Google+ account is linked! Unlink functionality may come later<br>
+		Your Google+ account is linked! <a href="{% url 'destroy' "google-oauth2" %}">Unlink</a><br>
 	{% else %}
 		<a href="{% url 'social:begin' "google-oauth2" %}">Link your Google+ account</a><br>
 	{% endif %}

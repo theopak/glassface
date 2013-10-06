@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^test_google/(?P<google_user_id>[^/]+)/(?P<circle_id>[^/]+)/$','glassface.views.add_to_circle'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^facebook/add/(.+)/$', 'glassface.facebookfriender.views.add'),
+    url(r'^destroy/(?P<backend>[^/]+)/$','glassface.views.destroy',name='destroy'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

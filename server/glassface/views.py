@@ -31,6 +31,11 @@ def create_user(request, user_creation_form=UserCreationForm):
     }
     return TemplateResponse(request, "registration/signup.html", context)
 
+def destroy(request,backend):
+    user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
+    user_auth_to_destroy.delete()
+    return HttpResponseRedirect("/") 
+
 def splash(request):
     if request.user.is_authenticated():
         try:
