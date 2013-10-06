@@ -10,8 +10,6 @@ package com.theopak.glassface;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -27,7 +25,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -35,7 +32,6 @@ import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.text.format.DateFormat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
@@ -169,7 +165,7 @@ public class MainActivity extends Activity {
   private void toggleSpeech() {
 	mRecognizing = !mRecognizing;
     if (mRecognizing) {
-      mPrompt.setText(R.string.prompt_text);
+      mPrompt.setText(R.string.blank_text);  // R.string.prompt_text
       mHint.setText(R.string.blank_text);
       mClock.setTextColor(getResources().getColor(R.color.transparent));
       recognizeSpeech();
@@ -241,9 +237,9 @@ public class MainActivity extends Activity {
           // TODO Auto-generated catch block
         }
         */
-    	toggleSpeech();
     	Intent showProfileIntent = new Intent(this, ShowProfileActivity.class);
         startActivity(showProfileIntent);
+    	toggleSpeech();
     }
   }
 
