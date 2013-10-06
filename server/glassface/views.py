@@ -39,7 +39,6 @@ def create_user(request, user_creation_form=UserCreationForm):
     return TemplateResponse(request, "registration/signup.html", context)
 
 def destroy(request,backend):
-<<<<<<< HEAD
     if backend == "facebook":
         gfu = GlassfaceUser.objects.get(user=request.user)
         gfu.facebook_email = ""
@@ -49,11 +48,6 @@ def destroy(request,backend):
         user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
         user_auth_to_destroy.delete()
     return HttpResponseRedirect("/") 
-=======
-    user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
-    user_auth_to_destroy.delete()
-    return HttpResponseRedirect("/")
->>>>>>> 13844e18863a69fbf5820afd73209b6ce69817f8
 
 def splash(request):
     if request.user.is_authenticated():
