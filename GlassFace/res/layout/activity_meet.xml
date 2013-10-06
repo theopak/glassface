@@ -31,6 +31,9 @@
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginLeft="@dimen/default_margin"
         android:textSize="@dimen/prompt_text_size" />
+    <ListView android:id="@+id/word_list"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip" />
     <TextView
         android:id="@+id/hint"
         android:layout_width="wrap_content"
