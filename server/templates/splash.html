@@ -2,20 +2,35 @@
 
 {% block content %}
 {% if guest %}
-	Here's some filler text on why you should join Glassface!
+	<div class="jumbotron">
+	  <div class="container">
+	    <p><em>Glassface</em> is an app that lets you add friends to social networks by taking pictures of their face with Google Glass. It's the future.</p>
+	  </div>
+	</div>
 {% else %}
 	<img src="{{profile_url}}" />
 	<p>
 	{% if twitter_registered %}
-		Your Twitter account is linked! <a href="{% url 'destroy' "twitter" %}">Unlink</a><br>
+		<span class=".glyphicon .glyphicon-ok"></span> Twitter account linked <a href="{% url 'destroy' "twitter" %}">(unlink)</a><br>
 	{% else %}
 		<a href="{% url 'social:begin' "twitter" %}">Link your Twitter account</a><br>
 	{% endif %}
-</p><p>
-	{% if google_registered %}
-		Your Google+ account is linked! <a href="{% url 'destroy' "google-oauth2" %}">Unlink</a><br>
+<<<<<<< HEAD
+
+	{% if facebook_registered %}
+		Your Facebook account is linked! <a href="{% url 'destroy' "facebook" %}">Unlink</a><br>
 	{% else %}
-		<a href="{% url 'social:begin' "google-oauth2" %}">Link your Google+ account</a><br>
+		<a href="{% url 'glassface.views.linkfacebook' %}">Link your Facebook account</a><br>
+	{% endif %}
+
+
+=======
+</p><p>
+>>>>>>> 13844e18863a69fbf5820afd73209b6ce69817f8
+	{% if google_registered %}
+		<span class=".glyphicon .glyphicon-ok"></span> Google&plus; account linked <a href="{% url 'destroy' "google-oauth2" %}">(unlink)</a><br>
+	{% else %}
+		<a href="{% url 'social:begin' "google-oauth2" %}">Link your Google&plus; account</a><br>
 	{% endif %}
 </p>
 {% endif %}
