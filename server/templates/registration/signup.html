@@ -1,43 +1,40 @@
 {% extends "base.html" %}
 
-{% block content %}
-	Opt-in to get started (we respect your privacy).
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+<div class="col-xs-12 col-sm-4 col-sm-offset-4">
 
-<form method="post" action="{% url 'glassface.views.create_user' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password1.label_tag }}</td>
-    <td>{{ form.password1 }}</td>
-</tr>
-<tr>
-    <td>{{ form.password2.label_tag }}</td>
-    <td>{{ form.password2 }}</td>
-</tr>
-<tr>
-    <td>{{ form.profile_url1.label_tag }}</td>
-    <td>{{ form.profile_url1 }}</td>
-        <td>{{ form.profile_url2.label_tag }}</td>
-    <td>{{ form.profile_url2 }}</td>
-        <td>{{ form.profile_url3.label_tag }}</td>
-    <td>{{ form.profile_url3 }}</td>
-        <td>{{ form.profile_url4.label_tag }}</td>
-    <td>{{ form.profile_url4 }}</td>
-        <td>{{ form.profile_url5.label_tag }}</td>
-    <td>{{ form.profile_url5 }}</td>
-</tr>
+	{% block content %}
+		<div class="alert alert-success">
+			<strong>Opt-in to get started.</strong> We respect your privacy.
+		</div>
+	{% if form.errors %}
+		<div class="alert alert-error">
+			<strong>Error</strong> Your username and password didn't match. Please try again.
+		</div>
+	{% endif %}
 
-</table>
-{{ form.media }}
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+	<form method="post" action="{% url 'glassface.views.create_user' %}">
+		{% csrf_token %}
+		<div class="input-group">
+			<input type="text" class="form-control" name="username" placeholder="Username" autofocus>
+		</div>
+		<div class="input-group">
+			<input type="password" class="form-control" name="password1" placeholder="Password">
+			<input type="password" class="form-control" name="password2" placeholder="Password (again)">
+		</div>
+		<div class="input-group">
+			{{ form.profile_url1 }}
+			{{ form.profile_url2 }}
+			{{ form.profile_url3 }}
+			{{ form.profile_url4 }}
+			{{ form.profile_url5 }}
+		</div>
+		<div class="input-group">
+			{{ form.media }}
+			<button class="btn btn-lg btn-primary btn-block" type="submit" value="login">Opt In</button>
+			<input type="hidden" name="next" value="{{ next }}" />
+		</div>
+	</form>
+
+</div>
 
 {% endblock %}
