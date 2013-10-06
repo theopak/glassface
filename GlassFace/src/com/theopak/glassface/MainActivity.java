@@ -37,9 +37,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
 import android.widget.TextView;
-//import android.os.SystemClock;
-//import android.text.format.Time;
-//android.speech.SpeechRecognizer
+import android.speech.SpeechRecognizer;
+import android.speech.RecognizerIntent;
 
 
 /**
@@ -52,6 +51,8 @@ public class MainActivity extends Activity {
   private Chronometer mClock;
   private boolean mRecognizing = false;
   private boolean mCapturing = false;
+  static final int RECOGNIZE_VOICE_REQUEST = 0;
+  static final int CAPTURE_IMAGE_REQUEST = 0;
   
   private String server = "http://18.111.86.219:8032";
 
@@ -141,12 +142,14 @@ public class MainActivity extends Activity {
     if (mRecognizing) {
       mPrompt.setText(R.string.prompt_text);
       mHint.setText(R.string.blank_text);
+      mClock.setText(R.string.blank_text);
+      Intent recognizeSpeechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+  	  startActivityForResult(recognizeSpeechIntent, RECOGNIZE_VOICE_REQUEST);
     } else {
       mPrompt.setText(R.string.blank_text);
       mHint.setText(R.string.hint_text);
     }
     mRecognizing = !mRecognizing;
-    captureImage();
   }
   
   /**
@@ -155,48 +158,62 @@ public class MainActivity extends Activity {
   private void captureImage() {
 	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    startActivityForResult(takePictureIntent, 31415);
-	    finish();
+	    //finish();
   }
   
-    protected void onActivityResult(int requestCode, int resultCode,
-            Intent data) {
+  /**
+   * Send a captured picture to the web service.
+   */
+  private void sendImage() {
+    // TODO
+	return;
+  }
+  
+  /**
+   * Handle activity result(s).
+   */
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == RECOGNIZE_VOICE_REQUEST && resultCode == RESULT_OK) {
+      captureImage();
+    }
+    else if (requestCode == CAPTURE_IMAGE_REQUEST ) {
         if (requestCode == 31415) {
             if (resultCode == RESULT_OK) {
-        	    Bundle extras = data.getExtras();
-        	    Bitmap mImageBitmap = (Bitmap) extras.get("data");
-        	    int[] pixels = null;
-        	    mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
-        	    
-        	    
+              Bundle extras = data.getExtras();
+              Bitmap mImageBitmap = (Bitmap) extras.get("data");
+              int[] pixels = null;
+              mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
+              
+              
                 ByteBuffer byteBuffer = ByteBuffer.allocate(pixels.length * 4);        
                 IntBuffer intBuffer = byteBuffer.asIntBuffer();
                 intBuffer.put(pixels);
 
                 byte[] pixBytes = byteBuffer.array();
 
-        	    
-        	    Base64.encodeToString(pixBytes, Base64.DEFAULT);
-        	    
-        	    HttpClient httpclient = new DefaultHttpClient();
-        	    HttpPost httppost = new HttpPost(server+"/recognize/");
+              
+              Base64.encodeToString(pixBytes, Base64.DEFAULT);
+              
+              HttpClient httpclient = new DefaultHttpClient();
+              HttpPost httppost = new HttpPost(server+"/recognize/");
                 
-        	    try {
-	        	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	                nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-	                nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
-	                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-	
-	                // Execute HTTP Post Request
-	                HttpResponse response = httpclient.execute(httppost);
-	            } catch (ClientProtocolException e) {
-	                // TODO Auto-generated catch block
-	            } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	            }
+              try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                  nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+                  nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
+                  httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+  
+                  // Execute HTTP Post Request
+                  HttpResponse response = httpclient.execute(httppost);
+              } catch (ClientProtocolException e) {
+                  // TODO Auto-generated catch block
+              } catch (IOException e) {
+                  // TODO Auto-generated catch block
+              }
 
             }
         }
     }
-
+  }
 
 }

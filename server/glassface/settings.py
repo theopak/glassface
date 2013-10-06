@@ -19,6 +19,10 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/plus.circles
 ,'https://www.googleapis.com/auth/plus.stream.write']
 
 
+LOGIN_REDIRECT_URL = '/'
+LOGIN_ERROR_URL = '/'
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

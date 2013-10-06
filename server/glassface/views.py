@@ -31,6 +31,32 @@ def create_user(request, user_creation_form=UserCreationForm):
     }
     return TemplateResponse(request, "registration/signup.html", context)
 
+def destroy(request,backend):
+    user_auth_to_destroy = UserSocialAuth.objects.get(user=request.user,provider=backend)
+    user_auth_to_destroy.delete()
+    return HttpResponseRedirect("/") 
+
+def splash(request):
+    if request.user.is_authenticated():
+        try:
+            twitterreg = UserSocialAuth.objects.get(user=request.user, provider="twitter")
+        except:
+            twitterreg = False
+
+        try:
+            googlereg = UserSocialAuth.objects.get(user=request.user, provider="google-oauth2")
+        except:
+            googlereg = False
+        context = {
+            'twitter_registered': twitterreg,
+            'google_registered': googlereg,
+        }
+    else:
+        context = {
+            'guest': True,
+        }
+    return TemplateResponse(request, "splash.html", context)
+
 def logins(request):
     user = request.user
     context = {
@@ -79,12 +105,36 @@ def add_to_circle(request,google_user_id,circle_id):
         headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
     return HttpResponse(r.text)
 
-def process_photo(request):
-#def process_photo(request,image):
-    #file_like = cStringIO.StringIO(base64.b64decode(image))
-    #user = glassface.recognition.recognize(file_like)
-    user = User.objects.get(pk=4)
-    output = ({})
-    output['twitter'] = twitteradd(request, user)
-    print output
-    return HttpResponse(output)
+def app_login(request):
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    response = {}
+    if user is not None:
+        response['result'] = 'success'
+    else:
+        response['result'] = 'fail'
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def app_identify(request):
+    print request.user
+    file_like = cStringIO.StringIO(base64.b64decode(request.POST['image']))
+    usertoadd = glassface.recognition.recognize(file_like)
+    #user = User.objects.get(pk=4)
+    response = {}
+    response['user'] = usertoadd.get_full_name()
+    response['uid'] = usertoadd.pk
+    response['match'] = 'True'
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def app_confirm(request):
+    print request.user
+    response = {}
+    response['connected'] = {}
+    usertoadd = User.objects.get(pk=request.POST['uid'])
+    response['connected']['twitter'] = twitteradd(request, usertoadd)
+    # Facebook add
+    # G+ add
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+    # uid
+    # username
+    # { connected: {'facebook', 'twitter'} }
