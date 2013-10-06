@@ -8,7 +8,7 @@
 	  </div>
 	</div>
 {% else %}
-	<img src="{{profile_url}}" width=300 max-height=500 />
+	<img src="{{profile_url}}" />
 	<p>
 	{% if twitter_registered %}
 		<span class=".glyphicon .glyphicon-ok"></span> Twitter account linked <a href="{% url 'destroy' "twitter" %}">(unlink)</a><br>
