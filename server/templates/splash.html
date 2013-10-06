@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if twitter_registered %}
+	Your Twitter account is linked! Unlink functionality may come later
+{% else %}
+	<a href="{% url 'social:begin' "twitter" %}">Link your Twitter account</a><br>
+{% endif %}
+{% if google_registered %}
+	Your Google+ account is linked! Unlink functionality may come later
+{% else %}
+	<a href="{% url 'social:begin' "google-oauth2" %}">Link your Google+ account</a><br>
+{% endif %}
+{% endblock %}

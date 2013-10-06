@@ -31,6 +31,23 @@ def create_user(request, user_creation_form=UserCreationForm):
     }
     return TemplateResponse(request, "registration/signup.html", context)
 
+def splash(request):
+    try:
+        twitterreg = UserSocialAuth.objects.get(user=request.user, provider="twitter")
+    except:
+        twitterreg = False
+
+    try:
+        googlereg = UserSocialAuth.objects.get(user=request.user, provider="google-oauth2")
+    except:
+        googlereg = False
+
+    context = {
+        'twitter_registered': twitterreg,
+        'google_registered': googlereg,
+    }
+    return TemplateResponse(request, "splash.html", context)
+
 def logins(request):
     user = request.user
     context = {
