@@ -65,13 +65,10 @@ def twitteradd(request, uidtofollow):
 
 def add_to_circle(request,google_user_id,circle_id):
     print request
-    google_api_key = "AIzaSyA6YjQwwDPZ52y8ejL9oemcvAc6rnAwwig"
+    google_api_key = "AIzaSyA8ey1d6QYkcTSxeD2dAeP4B3NafzzS34Y"
     user = request.user
     user_social_auth = UserSocialAuth.objects.get(provider="google-oauth2",user=user)
-    r = requests.get("https://www.googleapis.com/plusDomains/v1/people/"+google_user_id+"/audiences?key="+google_api_key,
+    r = requests.put("https://www.googleapis.com/plusDomains/v1/circles/"+circle_id
+        +"/people?userId="+google_user_id+"&key="+google_api_key,
         headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
-    print user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]
-    # r = requests.put("https://www.googleapis.com/plusDomains/v1/circles/"+circle_id
-    #     +"/people?userId="+google_user_id+"&key="+google_api_key,
-    #     headers={"authorization":user_social_auth.extra_data["token_type"]+" "+user_social_auth.extra_data["access_token"]})
     return HttpResponse(r.text)
