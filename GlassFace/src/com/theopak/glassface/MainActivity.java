@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -112,9 +113,9 @@ public class MainActivity extends Activity {
    * Capture a picture and then return to the base state.
    */
   private void captureImage() {
-	Intent intent = new Intent(getApplicationContext(), com.theopak.glassface.Custom_CameraActivity.class);
-	startActivity(intent);
-    finish();
+	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    startActivityForResult(takePictureIntent, 0);
+	    finish();
   }
 
 }
