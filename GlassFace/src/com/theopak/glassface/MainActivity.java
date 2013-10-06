@@ -8,15 +8,31 @@
 package com.theopak.glassface;
 
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
@@ -34,8 +50,11 @@ public class MainActivity extends Activity {
   private TextView mHint;
   private Chronometer mClock;
   private boolean mRecognizing = false;
-  static final int RECOGNIZE_SPEECH_REQUEST = 0;
-  static final int CAPTURE_IMAGE_REQUEST = 0;
+  static final int RECOGNIZE_SPEECH_REQUEST = 51413;
+  static final int CAPTURE_IMAGE_REQUEST = 31415;
+  
+  // Arbitrarily important IP for ~~localhost~~ Derek.
+  private String server = "http://18.111.86.219:8032";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +66,23 @@ public class MainActivity extends Activity {
     Typeface robo = Typeface.createFromAsset(this.getAssets(), "Roboto-Thin.ttf");
     mHint = (TextView) findViewById(R.id.hint);
     mHint.setTypeface(robo);
+    
+    HttpClient httpclient = new DefaultHttpClient();
+    HttpPost httppost = new HttpPost(server+"/recognize/");
+    
+    try {
+	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("username", "drock"));
+        nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
+        // Execute HTTP Post Request
+        HttpResponse response = httpclient.execute(httppost);
+    } catch (ClientProtocolException e) {
+        // TODO Auto-generated catch block
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+    }
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
@@ -66,7 +101,6 @@ public class MainActivity extends Activity {
         }
     });
     mClock.setBase(SystemClock.elapsedRealtime());
-    
     mClock.start();
   }
 
@@ -98,7 +132,8 @@ public class MainActivity extends Activity {
    * Toggle the Speech states.
    */
   private void toggleSpeech() {
-    if (!mRecognizing) {
+	mRecognizing = !mRecognizing;
+    if (mRecognizing) {
       mPrompt.setText(R.string.prompt_text);
       mHint.setText(R.string.blank_text);
       mClock.setTextColor(getResources().getColor(R.color.transparent));
@@ -108,7 +143,6 @@ public class MainActivity extends Activity {
       mHint.setText(R.string.hint_text);
       mClock.setTextColor(getResources().getColor(R.color.white));
     }
-    mRecognizing = !mRecognizing;
   }
   
   /** 
@@ -123,17 +157,9 @@ public class MainActivity extends Activity {
    * Capture a picture and then return to the base state.
    */
   private void captureImage() {
-	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
-	//finish();
-  }
-  
-  /**
-   * Send a captured picture to the web service.
-   */
-  private void sendImage() {
-    // TODO
-	return;
+    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
+    //finish();
   }
   
   /**
@@ -144,11 +170,41 @@ public class MainActivity extends Activity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == RECOGNIZE_SPEECH_REQUEST && resultCode == RESULT_OK) {
       captureImage();
-      Log.e(data.toString(), "wu");
+      Log.e("wu", data.toString());
     }
     else if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
-      sendImage();
-      toggleSpeech();
+    	Bundle extras = data.getExtras();
+        Bitmap mImageBitmap = (Bitmap) extras.get("data");
+        int[] pixels = null;
+        mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
+              
+        ByteBuffer byteBuffer = ByteBuffer.allocate(pixels.length * 4);        
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        intBuffer.put(pixels);
+
+        byte[] pixBytes = byteBuffer.array();
+
+        Base64.encodeToString(pixBytes, Base64.DEFAULT);
+              
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(server+"/recognize/");
+                
+        try {
+          List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+          nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+          nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
+          httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+          // Execute HTTP Post Request
+          HttpResponse response = httpclient.execute(httppost);
+        } catch (ClientProtocolException e) {
+        return;
+          // TODO Auto-generated catch block
+        } catch (IOException e) {
+         return;
+          // TODO Auto-generated catch block
+        }
+    	toggleSpeech();
     }
   }
 
