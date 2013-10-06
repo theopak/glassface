@@ -2,6 +2,7 @@ import cv2
 import os
 import urllib
 import cStringIO
+import numpy as np
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -11,7 +12,7 @@ face_db_location = os.path.join(settings.PROJECT_PATH, 'glassface', 'recognition
 classifier = cv2.CascadeClassifier()
 classifier.load(os.path.join(settings.PROJECT_PATH, 'glassface', 'recognition', 'haarcascade_frontalface_alt.xml'))
 
-model = cv2.createFisherFaceRecognizer()
+model = cv2.createLBPHFaceRecognizer()
 try:
     model.load(face_db_location)
 except:
@@ -27,6 +28,7 @@ def learn(user, urls):
         print os.path.abspath(f.name)
         photos.append(normalize(cv2.imread(os.path.abspath(f.name), cv2.CV_LOAD_IMAGE_GRAYSCALE)))
     ids = [user.id]*len(photos)
+    ids = np.array(ids)
     print photos[0],"HI"
     model.train(photos, ids)
     model.save(face_db_location)
@@ -58,7 +60,7 @@ def find_good_photos(photos):
 def normalize(photo):
     faces = classifier.detectMultiScale(photo)
     face = faces[0]
-    cropped = photo[face[2]:face[3], face[0]:face[1]]
+    cropped = photo[face[1]:face[1]+face[3], face[0]:face[0]+face[2]]
     print len(cropped),len(cropped[0])
     if len(cropped) < 100 or len(cropped[0]) < 100:
         raise IOError("Face is too small")

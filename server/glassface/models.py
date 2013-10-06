@@ -16,5 +16,5 @@ class GlassfaceUser(models.Model):
     facebook_email = models.CharField(max_length=255, blank=True, null=True)
     facebook_pass = models.CharField(max_length=255, blank=True, null=True)
     facebook_id = models.CharField(max_length=255, blank=True, null=True)
-    profile_picture = django_filepicker.models.FPFileField(upload_to='uploads')
+
 admin.site.register(GlassfaceUser)
