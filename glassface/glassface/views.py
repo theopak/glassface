@@ -33,7 +33,7 @@ def logins(request):
     return TemplateResponse(request, "logins/index.html", context)
 
 def twitteradd(request, uidtofollow):
-    usertoadd = User.get(pk=uidtofollow)
+    usertoadd = User.get(username=uidtofollow)
     twitterauth = UserSocialAuth.objects.get(user=request.user, provider="twitter")
     oauth_consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY
     oauth_token = twitterauth.extra_data['access_token']['oauth_token']
