@@ -70,20 +70,22 @@ public class MainActivity extends Activity {
     
     
     HttpClient httpclient = new DefaultHttpClient();
-    HttpPost httppost = new HttpPost(server+"/recognize/");
+    HttpPost httppost = new HttpPost(server+"/app_login/");
     
     try {
+    	Log.e("requesting", "r");
 	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("username", "drock"));
         nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
+        Log.e("presend", "p");
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
+        Log.e("response", response.toString());
     } catch (ClientProtocolException e) {
-        // TODO Auto-generated catch block
+        Log.e("err", e.toString());
     } catch (IOException e) {
-        // TODO Auto-generated catch block
+        Log.e("oherr", e.toString());
     }
 
     
