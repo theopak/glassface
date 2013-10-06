@@ -140,8 +140,8 @@ def add_to_circle(request,google_user_id,circle_id):
 
 def app_login(request):
     user = authenticate(username=request.POST['username'], password=request.POST['password'])
-    print username
-    print password
+    print request.POST['username']
+    print request.POST['password']
     response = {}
     if user is not None:
         response['result'] = 'success'
