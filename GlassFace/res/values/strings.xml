@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GlassFace</string>
+    <string name="action_meet">Meet</string>
+    <string name="blank_text"></string>
+    <string name="hero_text"></string>
+    <string name="prompt_text">ok glass, meet&#8230;</string>
+    <string name="hint_text">\" ok glass \"</string>
+    <string name="hint_yes">Yes</string>
+    <string name="hint_no">No</string>
+    <string name="hint_capture">Take Picture</string>
+
+</resources>
