@@ -2,7 +2,11 @@
 
 {% block content %}
 {% if guest %}
-	<em>Glassface</em> is an app that lets you add friends to social networks by taking pictures of their face with Google Glass.
+	<div class="jumbotron">
+	  <div class="container">
+	    <p><em>Glassface</em> is an app that lets you add friends to social networks by taking pictures of their face with Google Glass. It's the future.</p>
+	  </div>
+	</div>
 {% else %}
 	<img src="{{profile_url}}" width=300 max-height=500 />
 	<p>
