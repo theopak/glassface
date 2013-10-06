@@ -8,15 +8,31 @@
 package com.theopak.glassface;
 
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Chronometer;
@@ -36,6 +52,8 @@ public class MainActivity extends Activity {
   private Chronometer mClock;
   private boolean mRecognizing = false;
   private boolean mCapturing = false;
+  
+  private String server = "http://18.111.86.219:8032";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +65,29 @@ public class MainActivity extends Activity {
     Typeface robo = Typeface.createFromAsset(this.getAssets(), "Roboto-Thin.ttf");
     mHint = (TextView) findViewById(R.id.hint);
     mHint.setTypeface(robo);
+    
+    
+    
+    HttpClient httpclient = new DefaultHttpClient();
+    HttpPost httppost = new HttpPost(server+"/recognize/");
+    
+    try {
+	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("username", "drock"));
+        nameValuePairs.add(new BasicNameValuePair("password", "boop boop"));
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
+        // Execute HTTP Post Request
+        HttpResponse response = httpclient.execute(httppost);
+    } catch (ClientProtocolException e) {
+        // TODO Auto-generated catch block
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+    }
+
+    
+    
+    
     
     // The actual time must be displayed (live) so that the device
     //   can be "locked" into the app for repeated demonstration.
@@ -114,8 +154,49 @@ public class MainActivity extends Activity {
    */
   private void captureImage() {
 	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    startActivityForResult(takePictureIntent, 0);
+	    startActivityForResult(takePictureIntent, 31415);
 	    finish();
   }
+  
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        if (requestCode == 31415) {
+            if (resultCode == RESULT_OK) {
+        	    Bundle extras = data.getExtras();
+        	    Bitmap mImageBitmap = (Bitmap) extras.get("data");
+        	    int[] pixels = null;
+        	    mImageBitmap.getPixels(pixels, 0, mImageBitmap.getWidth(), 0, 0, mImageBitmap.getWidth(), mImageBitmap.getHeight());
+        	    
+        	    
+                ByteBuffer byteBuffer = ByteBuffer.allocate(pixels.length * 4);        
+                IntBuffer intBuffer = byteBuffer.asIntBuffer();
+                intBuffer.put(pixels);
+
+                byte[] pixBytes = byteBuffer.array();
+
+        	    
+        	    Base64.encodeToString(pixBytes, Base64.DEFAULT);
+        	    
+        	    HttpClient httpclient = new DefaultHttpClient();
+        	    HttpPost httppost = new HttpPost(server+"/recognize/");
+                
+        	    try {
+	        	    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+	                nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+	                nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
+	                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	
+	                // Execute HTTP Post Request
+	                HttpResponse response = httpclient.execute(httppost);
+	            } catch (ClientProtocolException e) {
+	                // TODO Auto-generated catch block
+	            } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	            }
+
+            }
+        }
+    }
+
 
 }
