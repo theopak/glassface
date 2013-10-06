@@ -17,7 +17,7 @@ try:
 except:
     pass
 
-def meet(user, photos):
+def learn(user, photos):
     for i in range(len(photos)):
         photos[i] = normalize(cv2.imread(photos[i], cv2.CV_LOAD_IMAGE_GRAYSCALE))
     ids = [user.id]*len(photos)
