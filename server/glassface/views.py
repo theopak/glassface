@@ -70,6 +70,8 @@ def logins(request):
 def twitteradd(request, usertoadd):
     #usertoadd = User.get(username=uidtofollow)
     twitterauth = UserSocialAuth.objects.get(user=request.user, provider="twitter")
+    if twitterauth is None:
+        return False
     oauth_consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY
     oauth_token = twitterauth.extra_data['access_token']['oauth_token']
     #oauth_nonce = "91227c2566963d6ae01eb72f974e964a"
@@ -78,7 +80,6 @@ def twitteradd(request, usertoadd):
     #currenttime = "1381017251"
     currenttime = str(int(time.time()))
     #user_to_follow = "15378324"
-
 
     from twython import Twython
     twitter = Twython(settings.SOCIAL_AUTH_TWITTER_KEY,
@@ -111,6 +112,8 @@ def add_to_circle(request,google_user_id,circle_id):
 
 def app_login(request):
     user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    print username
+    print password
     response = {}
     if user is not None:
         response['result'] = 'success'

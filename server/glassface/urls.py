@@ -7,7 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'glassface.views.splash', name='home'),
-    #url(r'^twitteradd/([a-zA-Z0-9]+)$', 'glassface.views.twitteradd'),
+    url(r'^twitteradd/([a-zA-Z0-9]+)$', 'glassface.views.twitteradd'),
     #url(r'^process$', 'glassface.views.'),
     # url(r'^glassface/', include('glassface.foo.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
