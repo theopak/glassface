@@ -24,11 +24,13 @@
       <div class="page-header clearfix" style="position:relative">
         <h1 class="pull-left">Glassface <small>Social networking with faces</small></h1>
         <h4 class="pull-right" style="position:absolute;right:0;bottom:12px">
-        	{% if user.is_authenticated %}
-        		<a href="{% url "django.contrib.auth.views.logout" %}"><span class=".glyphicon .glyphicon-log-out"></span> Logout</a>
-	        {% else %}
-	          	<a href="{% url "django.contrib.auth.views.login" %}"><span class=".glyphicon .glyphicon-log-in"></span> Login</a></h4>
-	        {% endif %}
+          {% if user.is_authenticated %}
+            <a href="{% url "django.contrib.auth.views.logout" %}"><span class=".glyphicon .glyphicon-log-out"></span> Logout</a>
+          {% else %}
+              <a href="{% url "django.contrib.auth.views.login" %}"><span class=".glyphicon .glyphicon-log-in"></span> Login</a>
+              &nbsp;|&nbsp;
+              <a href="{% url "glassface.views.create_user" %}"><span class=".glyphicon .glyphicon-log-in"></span> Sign Up</a>
+          {% endif %}
         </h4>
       </div>
 

@@ -23,12 +23,12 @@ page.onLoadFinished = function() {
   //   console.log(page.);
   // });
    page.open("https://www.facebook.com/", function(status){
-    var links = page.evaluate(function() {
-        return [].map.call(document.querySelectorAll('li#navTimeline a'), function(link) {
-            return link.getAttribute('href');
-        });
+    page.render("foo.png");
+    console.log("fooed");
+    page.evaluate(function() {
+        console.log(document.getElementById('navTimeline').getElementsByTagName('a')[0].getAttribute('href'));
     });
-    console.log(links);
+    page.render("foo.png");
     console.log("test");
     phantom.exit();
   });
@@ -37,6 +37,8 @@ page.onLoadFinished = function() {
  
 page.open("https://www.facebook.com/", function(status) {
   //console.log("opened", em);
+      page.render("blue.png");
+
     if ( status === "success" ) {
         page.evaluate(function(em, pas) {
               document.getElementById("email").value = em;
