@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'glassface.views.logins', name='home'),
     url(r'^twitteradd/([a-zA-Z0-9]+)$', 'glassface.views.twitteradd'),
+    url(r'^process$', 'glassface.views.process_photo'),
     # url(r'^glassface/', include('glassface.foo.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^accounts/signup/$', 'glassface.views.create_user'),
