@@ -1,5 +1,5 @@
 /**
- * MeetActivity.java
+ * MainActivity.java
  * AUTH: Theo Pak <mail@theopak.com>
  * URL:  https://github.com/theopak/glassface
  */
