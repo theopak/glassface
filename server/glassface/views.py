@@ -139,7 +139,6 @@ def add_to_circle(request,google_user_id,circle_id):
     return HttpResponse(r.text)
 
 def app_login(request):
-    return HttpResponse("FRAK")
     user = authenticate(username=request.POST['username'], password=request.POST['password'])
     print username
     print password
