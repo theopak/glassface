@@ -21,6 +21,4 @@ def extract(request):
     print "sexy"
     out = subprocess.check_output([phantomjs, script, request.POST['email'], request.POST['password']])
     print out
-    print out
-    print out
     return "user id goes here"

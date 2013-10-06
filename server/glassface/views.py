@@ -14,11 +14,8 @@ from social.apps.django_app.default.models import UserSocialAuth
 from glassface import settings
 import cStringIO
 import base64
-<<<<<<< HEAD
 from glassface import recognition
-=======
 from django.contrib.auth import authenticate
->>>>>>> 0a0ecc146e59bd63b376ed6bd6e794a6772641cc
 
 from requests import Session, Request
 
